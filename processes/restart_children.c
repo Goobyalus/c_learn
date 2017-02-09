@@ -5,6 +5,7 @@
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(*arr))
 #define DIG_TO_INT(digit) (digit-48)
+#define CHILD_PROC_FILE "wait_for_death"
 
 void print_info(pid_t* children) {
     printf("pid(%d), ppid(%d), [%d %d %d %d]\n", getpid(), getppid(),
@@ -33,7 +34,7 @@ int main() {
             case 1: 
             case 0: 
                 // Child replaces its memory space here
-                execl("print_pid", "print_pid", NULL);
+                execl(CHILD_PROC_FILE, CHILD_PROC_FILE, NULL);
                 printf("Failure to exec. Exiting.\n");
                 return 1;
                 break;
@@ -72,7 +73,7 @@ int main() {
             kill(children[DIG_TO_INT(in)], SIGKILL);
             children[DIG_TO_INT(in)] = fork();
             if (0 == children[DIG_TO_INT(in)]) {
-                execl("print_pid", "print_pid", NULL);
+                execl(CHILD_PROC_FILE, CHILD_PROC_FILE, NULL);
             } //else (child//TODO: error checking
             break;
             
